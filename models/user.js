@@ -6,7 +6,8 @@ const userModel = (mongoose) => {
     roles: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Role'
-    }]
+    }],
+    accessToken: String
   });
 
   const User = mongoose.model('User', userSchema);

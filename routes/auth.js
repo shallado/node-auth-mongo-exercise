@@ -14,6 +14,8 @@ const authRouter = (app) => {
     auth.signup
   );
 
+  router.post('/signin', auth.signin);
+
   app.use('/api/auth', router);
 }
 
