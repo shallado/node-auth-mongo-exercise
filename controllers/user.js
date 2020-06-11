@@ -1,3 +1,7 @@
+exports.publicAccess = (req, res) => {
+  res.send('All Content No Credentials Needed');
+};
+
 exports.userBoard = (req, res) => {
   res.send('User Content');
 };

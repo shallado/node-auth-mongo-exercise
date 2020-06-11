@@ -5,6 +5,8 @@ const { authJwt } = require('../middlewares');
 const router = express.Router();
 
 const userRouter = (app) => {
+  router.get('/public', user.publicAccess);
+
   router.get(
     '/user', 
     [authJwt.verifyToken],
