@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { userModel } = require('../models');
 const { secretKey } = require('../config/auth');
+
+const User = userModel;
 
 // verifyToken
 exports.verifyToken = (req, res, next) => {
@@ -21,5 +24,23 @@ exports.verifyToken = (req, res, next) => {
 };
 
 // isAdmin
+exports.isAdmin = (req, res, next) => {
+  const bearerToken = req.get('Authorization');
+  const token = bearerToken.replace('Bearer', '').trim();
+
+  User.findOne({ accessToken: token }).populate('roles', '-_v').exec()
+    .then((userData) => {
+      const adminChecker = userData.roles.some((role) => role.name === 'admin');
+
+      if (!adminChecker) {
+        return res.status(401).send({ 
+          message: 'Unauthorized access, require admin role' 
+        });
+      }
+
+      next();
+    })
+    .catch((err) => res.status(500).send({ message: err }));
+};
 
 // isModerator

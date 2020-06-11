@@ -9,7 +9,16 @@ const userRouter = (app) => {
     '/user', 
     [authJwt.verifyToken],
     user.userBoard
-  )
+  );
+
+  router.get(
+    '/admin', 
+    [
+      authJwt.verifyToken, 
+      authJwt.isAdmin
+    ],
+    user.adminBoard
+)
 
   app.use('/api/test', router);
 };
