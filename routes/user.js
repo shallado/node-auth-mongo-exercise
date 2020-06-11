@@ -12,13 +12,22 @@ const userRouter = (app) => {
   );
 
   router.get(
+    '/moderator',
+    [
+      authJwt.verifyToken,
+      authJwt.isModerator
+    ],
+    user.moderatorBoard
+  );
+
+  router.get(
     '/admin', 
     [
       authJwt.verifyToken, 
       authJwt.isAdmin
     ],
     user.adminBoard
-)
+  );
 
   app.use('/api/test', router);
 };

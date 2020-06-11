@@ -16,7 +16,7 @@ exports.verifyToken = (req, res, next) => {
 
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      res.status(401).send({ message: 'Unauthorized access' });
+      return res.status(401).send({ message: 'Unauthorized access' });
     }
 
     next();
@@ -44,3 +44,23 @@ exports.isAdmin = (req, res, next) => {
 };
 
 // isModerator
+exports.isModerator = (req, res, next) => {
+  const bearerToken = req.get('Authorization')
+  const token = bearerToken.replace('Bearer', '').trim();
+
+  User.findOne({ accessToken: token }).populate('roles', '-_v').exec()
+    .then((userData) => {
+      const moderatorChecker = userData.roles.some((role) => 
+        role.name === 'moderator'
+      );
+
+      if (!moderatorChecker) {
+        return res.status(401).send({ 
+          message: 'Unauthorized access, require moderator role'
+        });
+      }
+      
+      next();
+    })
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
